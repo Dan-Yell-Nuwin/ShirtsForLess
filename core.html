@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Content</title>
+        <style media="screen">
+            #custom-button {
+                padding: 10px;
+                color: white;
+                background-color: #009578;
+                border: ipx solid #000;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #custom-button: hover {
+                background-color: #00b28f;
+            }
+
+            #custon-text {
+                margin-left: 10px;
+                font-family: sans-serif;
+                color: #aaa;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>this is content</h1>
+        <form method="POST" action="/submit-form" enctype="multipart/form-data">
+            <input type="file" name="document"/>
+            <input type="submit"/>
+        </form>
+        <input type="file" id="real-file" hidden="hidden"/>
+        <button type="button" id="custom-button">choose a file</button>
+        <span id="custon-test">no file chosen</span>
+
+
+        <script type="text/javascript">
+            const realFileBtn = document.getElementById("real-file");
+            const customBtn = document.getElementById("custom-button");
+            const customTxt = document.getElementById("custom-text");
+
+            customBtn.addEventListener("click", function() {
+                realFileBtn.click();
+            });
+
+            realFileBtn.addEventListener("change", function() {
+                if (realFileBtn.value) {
+                    customTxt.innerHTML = realFileBtn.value;
+                } else {
+                    customTxt.innerHTML = "no file chosen"
+                }
+            });
+        </script>
+    </body>
+</html>
