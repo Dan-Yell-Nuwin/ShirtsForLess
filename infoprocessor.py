@@ -8,7 +8,7 @@ soup = BeautifulSoup(thred_up_html.text, "html.parser")
 containers = soup.find_all("div", {"class": "results-grid-item"})
 
 filename = "clothingProducts.csv"
-f = open(filename, "w", newline='', encoding="UTF-32BE")
+f = open(filename, "w", newline='', encoding="utf-32be")
 headers = "link, image, name, brand, size, price\n"
 f.write(headers)
 
@@ -42,7 +42,7 @@ for sites in poshmark_sites:
         img = container.find("img")["src"]
         size = container.find("li",{"class":"size"}).text.strip()
         
-        price = old_price[1:(old_price.rindex("$"))]
+        price = old_price[1:(old_price.rindex("$"))].strip()
         title = title.replace("," ,"，")
         
         if(container.find("li",{"class":"size without-brand"}) is None):
