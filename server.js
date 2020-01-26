@@ -20,29 +20,29 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs')
 
-/*
-var pictures = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads')
+
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'public/uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        cb(null, file.originalname);
     }
-})
+});
 
-var uploading = multer({ pictures: pictures})
+var upload = multer({ storage: storage})
 
-app.post('/upload', uploading.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
     const file = req.file;
     if (!file) {
         const error = new Error('Please upload a file')
         error.httpStatusCode = 400
         return next(error)
     }
-    res.send(file)
+    //res.send(file)
 });
 
-*/
+
 let gfs;
 
 const conn = mongoose.createConnection(url)
@@ -52,7 +52,7 @@ conn.once('open', () => {
     gfs.collection('uploads');
 });
 
-
+/*
 const storage = new GridFsStorage({
     url: url,
     file: (req, file) => {
@@ -68,7 +68,7 @@ const storage = new GridFsStorage({
 });
 
 const upload = multer({ storage });
-
+*/
 app.get('/', (req, res) => {
     gfs.files.find().toArray((err, files) => {
         if (!files || files.length === 0) {
@@ -137,7 +137,7 @@ app.get('/files', (req, res) => {
     })
 })
 
-
+/*
 app.post('/upload', upload.single('file'), (req, res) => {
     res.redirect('/');
 });
