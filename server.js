@@ -9,7 +9,7 @@ const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
-
+router = express.Router();
 //gridform.db = db;
 //gridform.mongoose = mongoose;
 
@@ -20,8 +20,29 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs')
 
+/*
+var pictures = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
+})
 
+var uploading = multer({ pictures: pictures})
 
+app.post('/upload', uploading.single('file'), (req, res) => {
+    const file = req.file;
+    if (!file) {
+        const error = new Error('Please upload a file')
+        error.httpStatusCode = 400
+        return next(error)
+    }
+    res.send(file)
+});
+
+*/
 let gfs;
 
 const conn = mongoose.createConnection(url)
@@ -66,6 +87,7 @@ app.get('/', (req, res) => {
             res.render('index', { files: files });
         }
     })
+
 })
 
 app.get('/image/:filename', (req, res) => {
@@ -114,6 +136,7 @@ app.get('/files', (req, res) => {
         }
     })
 })
+
 
 app.post('/upload', upload.single('file'), (req, res) => {
     res.redirect('/');
