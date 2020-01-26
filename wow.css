@@ -1,0 +1,41 @@
+﻿body {
+	background-color: lavender;
+	text-align: center;
+}
+
+h1 {
+	color: white
+	text_align: center;
+}
+
+h2 {
+	text_align: center;
+}
+
+h3 {
+	text_align: center;
+	font-size: 100px;
+}
+
+p {
+	font-family: sans-serif
+	font-size: 20px
+}
+
+div {
+	color: black;
+	background-color: white;
+	margin-left: 30vw;
+	margin-right: 30vw;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	padding-top: 20px;
+}
+
+img {
+	margin-top: 15px;
+}
+
+.header {
+	margin: 0;
+	background-color: lavender;

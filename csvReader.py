@@ -1,8 +1,7 @@
 import csv
-import codecs
 
 class Product:
-    def __init__(link, image, name, brand, gender, type_of, size, price):
+    def __init__(self, link, image, name, brand, gender, type_of, size, price):
         self.link = link
         self.image = image
         self.name = name
@@ -13,43 +12,57 @@ class Product:
         self.price = price
 
 
-
 with open('clothingProducts.csv', newline='') as csvfile:
-    fileReader = csv.reader(csvfile, delimiter=',', quotechar='|')
+    fileReader = csv.reader(csvfile, delimiter=',')
     reader = csv.reader(x.replace('\0', '') for x in csvfile)
     
     line = 0
     products = []
     
     for row in reader:
-        if row is not None:
-            data = row
-            #data[0] = link
-            #data[1] = image
-            #data[2] = name
-            #data[3] = brand
-            #data[4] = gender
-            #data[5] = type
-            #data[6] = size
-            #data[7] = price
-            products.append(Product(data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]))
+        if line == 0:
+            line += 1
+        else:
+            if row is not None:
+                link = row[0]
+                image = row[1]
+                name = row[2]
+                brand = row[3]
+                gender = row[4]
+                type_of = row[5]
+                size = row[6]
+                price = row[7]
+                
+                products.append(Product(link, image, name, brand, gender, type_of, size, price))
         
-    #keyword = "shirt"
+keyword = "trousers"
     
-f = open('sustainablydressed.html', 'wb')
+f = open('sustainablydressed.html', 'w')
+
+header = """<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="wow.css">
+    </head>
+    <div class="header">
+        <h3>Sustainably Dressed</h3>
+    </div>
+    """
+
+f.write(header)
 
 for product in products:
     print(product)
-    if product.name.find("shirt") is not None:
+    if product.name.find(keyword) is not None:
         print("  found the word!")
-         
-        message = "<div><img="
-        message += product.img + "width='300' height='300'</img><a href="
-        message += product.link + "><h1>"
-        message += product.name + "</h1></a><h2>"
-        message += product.brand + " | " + product.type_of + "</h2><h2>"
-        message += product.gender + " | " + product.size + "</h2><h3>"
-        message += product.price + "</h3></div>"
+        
+        wrapper = """<div>
+            <img src='%s' width="300" height="300"</img>
+            <a href=%s><h1>%s</h1></a>
+            <h2>%s | $%s</h2>
+            <h2>%s | %s</h2>
+            </div>"""
             
-f.write(message)
+        message = wrapper % (product.image, product.link, product.name, product.brand, product.price, product.gender, product.size)
+            
+        f.write(message)
 f.close()
