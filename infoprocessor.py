@@ -71,7 +71,7 @@ for site in thred_up_sites:
         if type_of != 'None':
             f.write("thredup.com" + link + "," + img + "," + name + "," + brand + "," + gender + "," + type_of + "," + size + "\t," + str(price) + "\n")
 
-print("scraped " + str(thredup_count) + "products from thredUp!")
+    print("scraped " + str(thredup_count) + "products from thredUp!")
 
 # poshmark
 poshmark_sites = ["https://poshmark.com/category/Men", "https://poshmark.com/category/Women",
@@ -119,7 +119,7 @@ for sites in poshmark_sites:
         if type_of != 'None':
             f.write(link + "," + img + "," + title + "," + brand + "," + gender + "," + type_of + "," + size[size.index('Size:') + 6:] + "\t," + price + "\n")
 
-print("scraped " + str(posh_count) + "products from poshmark!")
+    print("scraped " + str(posh_count) + "products from poshmark!")
 
 #ebay
 ebay_sites = ["https://www.ebay.com/b/Mens-Clothing/1059/bn_696958", "https://www.ebay.com/b/Womens-Clothing/15724/bn_661783"]
@@ -155,13 +155,18 @@ for site in ebay_sites:
         
         #print(category_soup.find("ul",{"class":"b-list__items_nofooter"}).findAll("li"))
         
-        products = category_soup.find("ul",{"class":"b-list__items_nofooter"}).findAll("li")
+        try:
+            products = category_soup.find("ul",{"class":"b-list__items_nofooter"}).findAll("li")
+        except:
+            print("no more products")
+            break
         
         for product in products:
             title = product.h3.text
             img = product.find("img")["src"]
             price = product.find("span",{"class":"s-item__price"}).text
             link = product.find("a")["href"]
+            type_of = type_of_clothing(title)
             
             if (link[21:22] == 'i'):
             
@@ -169,6 +174,7 @@ for site in ebay_sites:
                 print("      link: " + link)
                 print("      gender: " + gender)    
                 print("      price: " + price)
+                print("      type: " + type_of)
                 
                 details_html = requests.get(link)
                 details_soup = BeautifulSoup(details_html.text, "html.parser")
@@ -180,6 +186,7 @@ for site in ebay_sites:
                 for detail in details:
                     try:
                         brand = detail.find("h2").text
+                        brand = brand.replace(',', '|')
                         print("      brand: " + brand)
                         break
                     except:
@@ -223,28 +230,9 @@ for site in ebay_sites:
                     if not choice.text.endswith(']'):
                         size += choice.text + " | "
                 size = size[0:-2]        
-                print("         size: " + size)
+                print("      size: " + size)
         ebay_count += 1
+        if type_of != 'None':
+            f.write(link + "," + img + "," + title + "," + brand + "," + gender + "," + type_of + "," + size + "\t," + price + "\n")
         
-print("scraped " + ebay_count + " products from eBay!")
-
-'''
-                    try:
-                        gender_keyword = "Size (" + gender + "'s)"
-                        sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
-                    except:
-                        try:
-                            gender_keyword = "Size (" + gender + "s)"
-                            sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
-                        except:
-                            try:
-                                gender_keyword = "Size （" + gender + "'s）"
-                                sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
-                            except:
-                                try:
-                                    gender_keyword = "Size （" + gender + "s）"
-                                    sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
-                                except:
-                                    sizes = ["N/A"]
-                                    '''
-
+        print("scraped " + str(ebay_count) + " products from eBay!")
