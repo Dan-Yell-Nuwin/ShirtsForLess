@@ -15,7 +15,21 @@ router = express.Router();
 
 var url = "mongodb://localhost:27017/test";
 
+var Schema = mongoose.Schema;
 
+var ClothingSchema = new Schema({
+    name : String,
+    brand: String,
+    size: String,
+    price: Number,
+    link: String,
+    image: String
+
+})
+
+var ClothesModel = mongoose.model('ClothingModel', ClothingSchema);
+
+module.exports = ClothesModel;
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.set('view engine', 'ejs')
