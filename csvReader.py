@@ -35,7 +35,7 @@ with open('clothingProducts.csv', newline='') as csvfile:
                 
                 products.append(Product(link, image, name, brand, gender, type_of, size, price))
         
-keyword = "trousers"
+keyword = "pants"
     
 f = open('sustainablydressed.html', 'w')
 
@@ -51,13 +51,12 @@ header = """<html>
 f.write(header)
 
 for product in products:
-    print(product)
-    if product.name.find(keyword) is not None:
-        print("  found the word!")
+    if keyword in product.name:
+        print("  found the word in " + product.name)
         
         wrapper = """<div>
             <img src='%s' width="300" height="300"</img>
-            <a href=%s><h1>%s</h1></a>
+            <a href=https://www.%s target="_blank"><h1>%s</h1></a>
             <h2>%s | $%s</h2>
             <h2>%s | %s</h2>
             </div>"""
