@@ -15,7 +15,7 @@ def type_of_clothing(clothes):
     shirt = ['Shirt', 'Blouse']
     dress = ['Dress', 'Romper', 'Jumpsuit', 'Skirt']
     coat = ['Coat', 'Cardigan', 'Jacket', 'Parka']
-    trouser = ['Trousers', 'Pants', 'Jeans']
+    trouser = ['Trousers', 'Pants', 'Jeans', 'Shorts']
     sandal = ['Sandals', 'Heels', 'Wedges', 'Pumps', 'Stilettos', 'Chacos', 'Flip Flop']
     ankle_boot = ['Boots']
     sneakers = ['Sneakers', 'Shoes']
@@ -131,6 +131,7 @@ for site in ebay_sites:
     
     ebay_count = 0
 
+
     categories = []
         
     items.pop(0)
@@ -144,7 +145,7 @@ for site in ebay_sites:
         
     for category in categories:
         category_title = category.text
-        category_link = category.a["href"] + '?rt=nc&LH_ItemCondition=3000'
+        category_link = category.a["href"]
         print("  searching through " + category_title + "...")
         
         gender = category_title[0:category_title.find("'")]
@@ -161,15 +162,13 @@ for site in ebay_sites:
             img = product.find("img")["src"]
             price = product.find("span",{"class":"s-item__price"}).text
             link = product.find("a")["href"]
-            type_of = type_of_clothing(title)
             
             if (link[21:22] == 'i'):
             
                 print("  **searching through " + title + "...")
-                print("      link: " + link)   
+                print("      link: " + link)
+                print("      gender: " + gender)    
                 print("      price: " + price)
-                print("      gender: " + gender) 
-                print("      type: " + type_of)
                 
                 details_html = requests.get(link)
                 details_soup = BeautifulSoup(details_html.text, "html.parser")
@@ -226,8 +225,26 @@ for site in ebay_sites:
                 size = size[0:-2]        
                 print("         size: " + size)
         ebay_count += 1
-        f.write(link + "," + img + "," + title + "," + brand + "," + gender + "," + type_of + "," + size + "\t," + price + "\n")
         
-print("scraped " + str(ebay_count) + "products from eBay!")
+print("scraped " + ebay_count + " products from eBay!")
 
+'''
+                    try:
+                        gender_keyword = "Size (" + gender + "'s)"
+                        sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
+                    except:
+                        try:
+                            gender_keyword = "Size (" + gender + "s)"
+                            sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
+                        except:
+                            try:
+                                gender_keyword = "Size （" + gender + "'s）"
+                                sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
+                            except:
+                                try:
+                                    gender_keyword = "Size （" + gender + "s）"
+                                    sizes = details_soup.find("select",{"name":gender_keyword}).findAll("option")
+                                except:
+                                    sizes = ["N/A"]
+                                    '''
 
