@@ -5,8 +5,28 @@ from bs4 import BeautifulSoup
 
 filename = "clothingProducts.csv"
 f = open(filename, "w", newline='', encoding="UTF-32BE")
-headers = "link, image, name, brand, category, size, price\n"
+headers = "link, image, name, brand, category, type, size, price\n"
 f.write(headers)
+
+
+def type_of_clothing(clothes):
+    t_shirt_top = ['T-Shirt', 'Top', 'Bodysuit']
+    pullover = ['Pullover', 'Sweater', 'Sweatshirt', 'Hoodie']
+    shirt = ['Shirt', 'Blouse']
+    dress = ['Dress', 'Romper', 'Jumpsuit', 'Skirt']
+    coat = ['Coat', 'Cardigan', 'Jacket', 'Parka']
+    trouser = ['Trousers', 'Pants', 'Jeans']
+    sandal = ['Sandals', 'Heels', 'Wedges', 'Pumps', 'Stilettos', 'Chacos', 'Flip Flop']
+    ankle_boot = ['Boots']
+    sneakers = ['Sneakers', 'Shoes']
+    bag = ['Bag', 'Backpack', 'Purse']
+    types = [t_shirt_top, pullover, shirt, dress, coat, trouser, sandal, ankle_boot, sneakers, bag]
+    for arr in types:
+        for entry in arr:
+            if entry.lower() in clothes.lower():
+                return arr[0]
+    return 'None'
+
 
 # thredup
 thred_up_sites = ['https://www.thredup.com/products/women?department_tags=women&sort=Newest%20First',
@@ -34,11 +54,15 @@ for site in thred_up_sites:
         else:
             size = 'One size/No size'
         name = data['name']
+        type_of = type_of_clothing(name)
         price = data['offers']['price']
-        f.write("thredup.com" + link + "," + img + "," + name + "," + brand + "," + category + "," + size + "\t," + str(price) + "\n")
+
+        if type_of != 'None':
+            f.write("thredup.com" + link + "," + img + "," + name + "," + brand + "," + category + "," + type_of + "," + size + "\t," + str(price) + "\n")
 
 # poshmark
-poshmark_sites = ["https://poshmark.com/category/Men", "https://poshmark.com/category/Women", "https://poshmark.com/category/Kids"]
+poshmark_sites = ["https://poshmark.com/category/Men", "https://poshmark.com/category/Women",
+                  "https://poshmark.com/category/Kids"]
 demoji.download_codes()
 
 for sites in poshmark_sites:
@@ -51,6 +75,7 @@ for sites in poshmark_sites:
         link = "poshmark.com" + container.find("a")["href"]
         old_price = container.find("div", {"class": "price"}).text.strip()
         title = container.find("a", {"class": "title"}).text.strip()
+        type_of = type_of_clothing(title)
         img = container.find("img")["src"]
         size = container.find("li", {"class": "size"}).text.strip()
 
@@ -65,18 +90,5 @@ for sites in poshmark_sites:
             brand = "Assorted Brands"
         brand = brand.replace('’', '\'')
 
-        # print(requests.get(sites).encoding)
-        # if (requests.get(sites).encoding == "utf-8"):
-        result = link + "," + img + "," + title + "," + brand + "," + category + "," + size[size.index('Size:') + 6:] + "\t," + price + "\n"
-        # if (result.isprintable()):
-        f.write(result)
-
-    """
-    print("\n")
-    print("link: " + link)
-    print("title: " + title)
-    print("price: " + price)
-    print("img: " + img)
-    print("size: " + size)
-    print("brand: " + brand)
-    """
+        if type_of != 'None':
+            f.write(link + "," + img + "," + title + "," + brand + "," + category + "," + type_of + "," + size[size.index('Size:') + 6:] + "\t," + price + "\n")
